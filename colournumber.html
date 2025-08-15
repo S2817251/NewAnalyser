@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Color & Number Analyzer</title>
+  <style>
+    * { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; box-sizing: border-box; }
+    body {
+      background: linear-gradient(-45deg, #1f1c2c, #928dab, #2c3e50, #4ca1af);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: #fff; padding: 20px; min-height: 100vh;
+    }
+    @keyframes gradientBG { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+    .container {
+      max-width: 420px; width: 100%; margin: auto; background: #fff; border-radius: 15px;
+      padding: 20px; color: #000; box-shadow: 0 0 15px rgba(0,0,0,0.3); margin-bottom: 120px; position: relative;
+    }
+    .top-section { display: flex; align-items: center; margin-bottom: 15px; flex-wrap: wrap; }
+    .top-section img { width: 60px; height: 60px; border-radius: 15px; border: 2px solid #444; }
+    .top-section .welcome { margin-left: 10px; font-size: 14px; font-weight: 500; flex: 1; }
+
+    h2 { text-align: center; color: red; font-size: 18px; margin-bottom: 15px; }
+    input {
+      width: 100%; padding: 12px; font-size: 16px; margin-bottom: 15px; border-radius: 10px;
+      border: 1px solid #ccc; outline: none;
+    }
+    button {
+      width: 100%; padding: 12px; font-size: 16px; background: green; color: white;
+      border: none; border-radius: 10px; margin-bottom: 15px; cursor: pointer; transition: background 0.3s;
+    }
+    button:hover { background: #006400; }
+    .result-box {
+      text-align: center; font-size: 18px; font-weight: bold; padding: 10px; border-radius: 10px;
+      background: #eee; color: #000; display: none; margin-bottom: 15px;
+    }
+    .use-predictor { text-align: center; font-size: 16px; font-weight: 500; color: #fff; background-color: #333; padding: 15px; border-radius: 10px; margin-top: 20px; }
+
+    .bottom-links {
+      position: fixed; bottom: 10px; left: 0; width: 100%; padding: 0 10px;
+      box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; z-index: 999;
+    }
+    .bottom-links button {
+      background: #007bff; color: white; border: none; border-radius: 10px; padding: 12px; font-size: 15px; cursor: pointer;
+    }
+    .bottom-links button:hover { background: #0056b3; }
+
+    /* Info Button */
+    .info-btn {
+      position: absolute; top: 15px; right: 15px; background: #007bff; color: white;
+      font-size: 16px; font-weight: bold; width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    .info-btn:hover { background: #0056b3; }
+
+    /* Popup Common */
+    .popup-overlay {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.8); justify-content: center; align-items: center; z-index: 1000; padding: 10px;
+    }
+    .popup {
+      background-color: #fff; color: #000; padding: 15px; border-radius: 10px; text-align: center; max-width: 95%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6); font-size: 14px;
+    }
+    .popup h2 { margin-top: 0; font-size: 16px; }
+    .popup p { font-size: 13px; margin: 10px 0; line-height: 1.4; }
+    .popup img { max-width: 100%; border-radius: 8px; margin-top: 10px; }
+    .popup button {
+      margin-top: 12px; padding: 8px 16px; background: #007bff; border: none; border-radius: 6px; color: white; font-size: 14px; cursor: pointer;
+    }
+    .popup button:hover { background: #0056b3; }
+    .popup .disclaimer-btn { margin-top: 8px; background: #ff9800; }
+    .popup .disclaimer-btn:hover { background: #e68900; }
+
+    /* Responsive Design */
+    @media (max-width: 480px) {
+      h2 { font-size: 16px; }
+      .top-section .welcome { font-size: 13px; }
+      input, button { font-size: 14px; padding: 10px; }
+      .bottom-links button { font-size: 14px; padding: 10px; }
+      .result-box { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Info Button -->
+  <div class="info-btn" onclick="openPopup('infoPopup')">i</div>
+
+  <!-- Info Popup -->
+  <div class="popup-overlay" id="infoPopup">
+    <div class="popup">
+      <h2>About Color & Number Predictor</h2>
+
+      <p>First choose wingo 30 sec, 1min, 3min
+        <BR>Enter the period number, click start, and see ANALYSE color & number. Use it wisely for practice and fun!</p>
+      <button onclick="closePopup('infoPopup')">Close</button>
+      <button class="disclaimer-btn" onclick="openPopup('disclaimerPopup')">📜 Disclaimer</button>
+    </div>
+  </div>
+
+  <!-- Disclaimer Popup -->
+  <div class="popup-overlay" id="disclaimerPopup">
+    <div class="popup">
+      <h2>📜 Disclaimer</h2>
+    <p>
+      This application is created for educational and informational purposes only.<br>
+      The data shown is generated randomly and not based on any real game results.<br>
+      This app does not guarantee the result of any game, nor does it promote any form of gambling.<br>
+      Any decision you make using this tool is entirely your own responsibility.<br>
+      By using this app, you agree it is only an analysis tool, and all associated risks are your own.
+    </p>
+      <button onclick="closePopup('disclaimerPopup')">Close</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="top-section">
+      <img src="cn.png" alt="Logo" />
+      <div class="welcome">Welcome to our analyser app! Enter your period number and click Analyse.</div>
+    </div>
+
+    <h2>COLOUR & NUMBER PREDICTER</h2>
+
+    <input type="number" id="periodInput" placeholder="Enter Period Number" />
+    <div class="result-box" id="resultBox"></div>
+    <button onclick="showResult()">Analyse</button>
+
+    <div class="use-predictor">You can use this analyser for any platform.</div>
+  </div>
+
+  <div class="bottom-links">
+    <button onclick="window.open('https://linkopen19.github.io/LinkOpener/colourpredictiontoolschannel.html')">📢 JOIN TELEGRAM FOR UPDATES</button>
+  </div>
+
+  <script>
+    // Popup functions
+    function openPopup(id) { document.getElementById(id).style.display = 'flex'; }
+    function closePopup(id) { document.getElementById(id).style.display = 'none'; }
+
+    // Predictor logic
+    const resultBox = document.getElementById('resultBox');
+    const periodInput = document.getElementById('periodInput');
+    const resultsMap = {};
+
+    function showResult() {
+      const period = periodInput.value.trim();
+      if (period === '') {
+        resultBox.style.display = 'block';
+        resultBox.innerText = '⚠ Please enter a period number!';
+        resultBox.style.backgroundColor = '#eee';
+        resultBox.style.color = '#000';
+        setTimeout(() => { resultBox.style.display = 'none'; }, 3000);
+        return;
+      }
+      if (!resultsMap[period]) {
+        const color = Math.random() > 0.5 ? 'Red' : 'Green';
+        const evenNums = [0, 2, 4, 6, 8];
+        const oddNums = [1, 3, 5, 7, 9];
+        const number = color === 'Red'
+          ? evenNums[Math.floor(Math.random() * evenNums.length)]
+          : oddNums[Math.floor(Math.random() * oddNums.length)];
+        resultsMap[period] = `${color} ${number}`;
+      }
+      resultBox.innerText = `Result: ${resultsMap[period]}`;
+      resultBox.style.display = 'block';
+      resultBox.style.backgroundColor = resultsMap[period].includes('Red') ? 'red' : 'green';
+      resultBox.style.color = 'white';
+      setTimeout(() => {
+        resultBox.style.display = 'none';
+        periodInput.value = '';
+      }, 3000);
+    }
+  </script>
+
+</body>
+</html>

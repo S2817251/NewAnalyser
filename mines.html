@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MINES ANALYSER</title>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+        height: 100vh;
+        margin: 0;
+        position: relative;
+        color: #1565c0;
+    }
+
+    /* Info Button */
+    .info-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #1e88e5;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+    .info-btn:hover { background: #1565c0; }
+
+    /* Popup Overlay */
+    .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    .popup {
+        background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+        padding: 20px;
+        border-radius: 12px;
+        max-width: 400px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    .popup h2 { margin-bottom: 15px; color: #1565c0; }
+    .popup p { line-height: 1.5; }
+    .popup button {
+        margin-top: 15px;
+        padding: 12px 25px;
+        background: #1e88e5;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    .popup button:hover { background: #1565c0; }
+
+    /* Card */
+    .card {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        background: linear-gradient(145deg, #d0e7ff, #a3c4f3);
+        padding: 15px 20px;
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        margin-bottom: 20px;
+    }
+    .card img { width: 90px; height: 90px; border-radius: 10px; border: 2px solid #1e88e5; }
+    .cardinfo { margin-left: 15px; }
+
+    /* Grid */
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(5, 60px);
+        grid-template-rows: repeat(5, 60px);
+        gap: 12px;
+    }
+    .grid-item {
+        width: 60px;
+        height: 60px;
+        background: #bbdefb;
+        border: 3px solid #1e88e5;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .grid-item:hover { transform: scale(1.1); box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+    .mine {
+        background-image: url('star.png');
+        background-size: cover;
+        background-position: center;
+        animation: pop 0.5s ease-in-out;
+    }
+    @keyframes pop { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+    /* Buttons */
+    #startBtn, .link-btn {
+        padding: 14px 30px;
+        font-size: 18px;
+        margin-top: 15px;
+        background: #1e88e5;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+    #startBtn:hover, .link-btn:hover { background: #1565c0; transform: scale(1.05); }
+
+    .button-container { margin-top: 15px; display: flex; flex-direction: column; gap: 12px; }
+</style>
+</head>
+<body>
+
+<!-- Info Button -->
+<div class="info-btn" onclick="openPopup('info')">i</div>
+
+<!-- Info Popup -->
+<div class="popup-overlay" id="infoPopup">
+    <div class="popup">
+        <h2>About Mines Analyser</h2>
+        <p>This is a simulation tool for educational purposes only.<br><br>
+           1. Open Mines Game.<br>
+           2. Select 3 number of mines.<br>
+           3. Click START ANALYSE to generate a random pattern.<br>
+           4. This tool does not give real game predictions and is only for learning UI interaction and randomness.
+        </p>
+        <button onclick="closePopup()">Close</button>
+        <br><br>
+        <button onclick="openPopup('disclaimer')">📜 Disclaimer</button>
+    </div>
+</div>
+
+<!-- Disclaimer Popup -->
+<div class="popup-overlay" id="disclaimerPopup">
+    <div class="popup">
+        <h2>📜 Disclaimer</h2>
+        <p>
+      This application is created for educational and informational purposes only.<br>
+      The data shown is generated randomly and not based on any real game results.<br>
+      This app does not guarantee the result of any game, nor does it promote any form of gambling.<br>
+      Any decision you make using this tool is entirely your own responsibility.<br>
+      By using this app, you agree it is only an analysis tool, and all associated risks are your own.
+    </p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+</div>
+
+<!-- Card -->
+<div class="card">
+    <img src="mines.png" alt="Game Image" />
+    <div class="cardinfo"><h5>MINES ANALYSER</h5></div>
+</div>
+
+<!-- Grid -->
+<div class="grid-container" id="gridContainer"></div>
+<button id="startBtn">START ANALYSE</button>
+
+<!-- Telegram Join Button -->
+<div class="button-container">
+    <button class="link-btn" onclick="window.open('https://telegram.me/Team19_Official', '_blank')">📢 JOIN TELEGRAM FOR UPDATES</button>
+</div>
+
+<script>
+const gridContainer = document.getElementById('gridContainer');
+const startBtn = document.getElementById('startBtn');
+let isFirstPrediction = true;
+
+function openPopup(type) {
+    closePopup();
+    if(type==='info') document.getElementById('infoPopup').style.display='flex';
+    else if(type==='disclaimer') document.getElementById('disclaimerPopup').style.display='flex';
+}
+
+function closePopup() {
+    document.getElementById('infoPopup').style.display='none';
+    document.getElementById('disclaimerPopup').style.display='none';
+}
+
+function createGrid() {
+    gridContainer.innerHTML='';
+    for(let i=0;i<25;i++){
+        const gridItem=document.createElement('div');
+        gridItem.classList.add('grid-item');
+        gridContainer.appendChild(gridItem);
+    }
+}
+
+function placeMines() {
+    const positions=[...Array(25).keys()].sort(()=>0.5-Math.random()).slice(0,5);
+    positions.forEach((index,i)=>{
+        setTimeout(()=>{
+            gridContainer.children[index].classList.add('mine');
+        }, i*300);
+    });
+}
+
+startBtn.addEventListener('click',()=>{
+    createGrid();
+    placeMines();
+    if(isFirstPrediction){ startBtn.textContent='NEXT'; isFirstPrediction=false; }
+});
+
+createGrid();
+</script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AVIATOR ANALYSER</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+    .info-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #ff4b5c;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    .info-btn:hover {
+      background: #ff6b7c;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .header img {
+      width: 60px;
+      border-radius: 50%;
+      border: 2px solid #ff4b5c;
+    }
+    .header h1 {
+      font-size: 2.5rem;
+      color: #ff4b5c;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+    }
+    .aviator {
+      width: 130px;
+      position: absolute;
+      bottom: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: bottom 2s ease-out, opacity 0.5s;
+    }
+    .prediction-box {
+      background: #1b262c;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+      text-align: center;
+      margin-bottom: 20px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .prediction-box:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+    }
+    button {
+      padding: 14px 30px;
+      background-color: #ff4b5c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background-color 0.3s, transform 0.3s;
+      margin: 10px;
+    }
+    button:hover {
+      background-color: #ff6b7c;
+      transform: scale(1.1);
+    }
+    .link-buttons {
+      position: absolute;
+      bottom: 50px;
+      display: flex;
+      gap: 15px;
+    }
+    /* Popup Style */
+    .popup-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .popup {
+      background: #1b262c;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      max-width: 90%;
+      width: 400px;
+    }
+    .popup h2 {
+      color: #ff4b5c;
+      margin-bottom: 15px;
+    }
+    .popup p {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    .popup img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+    .popup button {
+      margin-top: 15px;
+      padding: 8px 20px;
+      background: #ff4b5c;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .popup button:hover {
+      background: #ff6b7c;
+    }
+    .disclaimer-btn {
+      background: transparent;
+      color: #ffbaba;
+      font-size: 14px;
+      margin-top: 8px;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .disclaimer-popup p {
+      font-size: 14px;
+      color: #fff;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+<div class="info-btn" onclick="openPopup()">i</div>
+
+<!-- Info Popup -->
+<div class="popup-overlay" id="infoPopup">
+  <div class="popup">
+    <h2>Aviator Analyser - Info</h2>
+    <p>This is a simulation tool for educational purposes only.<br>  
+       Step 1: 🚀Click  Start analyse<br> 
+       Step 2: Click START ANALYSE to generate a random pattern.  <br>
+       Step 3: This tool does not give real game predictions and is only for learning UI interaction and randomness.</p>
+    <button onclick="closePopup()">Close</button>
+    <div class="disclaimer-btn" onclick="openDisclaimer()">📜 Disclaimer</div>
+  </div>
+</div>
+
+<!-- Disclaimer Popup -->
+<div class="popup-overlay" id="disclaimerPopup">
+  <div class="popup disclaimer-popup">
+    <h2>📜 Disclaimer</h2>
+    <p>
+      This application is created for educational and informational purposes only.<br>
+      The data shown is generated randomly and not based on any real game results.<br>
+      This app does not guarantee the result of any game, nor does it promote any form of gambling.<br>
+      Any decision you make using this tool is entirely your own responsibility.<br>
+      By using this app, you agree it is only an analysis tool, and all associated risks are your own.
+    </p>
+    <button onclick="closeDisclaimer()">Close</button>
+  </div>
+</div>
+
+<div class="header">
+  <img src="aviator.png" alt="Aviator Icon">
+  <h1>Aviator Analyser</h1>
+</div>
+
+<img src="rocket.png" alt="Aviator Plane" class="aviator" id="aviatorPlane">
+
+<div class="prediction-box" id="predictionBox">
+  <h2>🚀 Press 'Start' to know your next analyse!</h2>
+</div>
+
+<button id="startBtn">🚀 Start analyse</button>
+
+<div class="link-buttons">
+  <button onclick="window.open('https://linkopen19.github.io/LinkOpener/colourpredictiontoolschannel.html', '_blank')">📢 JOIN TELEGRAM FOR UPDATES</button>
+</div>
+
+<script>
+  const startBtn = document.getElementById('startBtn');
+  const predictionBox = document.getElementById('predictionBox');
+  const aviatorPlane = document.getElementById('aviatorPlane');
+
+  function openPopup() {
+    document.getElementById('infoPopup').style.display = 'flex';
+  }
+  function closePopup() {
+    document.getElementById('infoPopup').style.display = 'none';
+  }
+  function openDisclaimer() {
+    document.getElementById('infoPopup').style.display = 'none';
+    document.getElementById('disclaimerPopup').style.display = 'flex';
+  }
+  function closeDisclaimer() {
+    document.getElementById('disclaimerPopup').style.display = 'none';
+  }
+
+  let predictionCount = 0;
+
+  function generatePrediction() {
+    aviatorPlane.style.transition = 'none';
+    aviatorPlane.style.bottom = '-100px';
+    aviatorPlane.offsetHeight;
+    aviatorPlane.style.transition = 'bottom 2s ease-out, opacity 0.5s';
+
+    aviatorPlane.style.opacity = '1';
+    aviatorPlane.style.bottom = '500px';
+
+    setTimeout(() => {
+      aviatorPlane.style.opacity = '0';
+      showPrediction();
+      startBtn.innerText = '🔄 Next';
+    }, 2000);
+  }
+
+  function showPrediction() {
+    let multiplier;
+    predictionCount++;
+
+    if (predictionCount % 50 === 0) {
+      multiplier = (Math.random() * (30 - 10) + 10).toFixed(2);
+    } else if (predictionCount % 15 === 0) {
+      multiplier = (Math.random() * (10 - 4) + 4).toFixed(2);
+    } else {
+      multiplier = (Math.random() * (4 - 1) + 1).toFixed(2);
+    }
+
+    predictionBox.innerHTML = `<h2>🎯 Analyse: ${multiplier}x</h2>`;
+  }
+
+  startBtn.addEventListener('click', generatePrediction);
+</script>
+
+</body>
+</html>

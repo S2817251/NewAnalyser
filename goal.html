@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GOAL ANALYSER</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: linear-gradient(135deg, #14532d, #166534, #15803d);
+      height: 100vh;
+      margin: 0;
+      color: #fff;
+    }
+
+    /* Info Button */
+    .info-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #22c55e;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    .info-btn:hover {
+      background: #16a34a;
+    }
+
+    /* Popup Overlay */
+    .popup-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .popup {
+      background: #166534;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      max-width: 90%;
+      width: 400px;
+    }
+    .popup h2 {
+      color: #22c55e;
+      margin-bottom: 15px;
+    }
+    .popup p {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    .popup img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+    .popup button {
+      margin-top: 15px;
+      padding: 8px 20px;
+      background: #22c55e;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .popup button:hover {
+      background: #16a34a;
+    }
+
+    /* Card */
+    .card {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      background-color: #166534;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+      margin-top: 20px;
+      gap: 15px;
+    }
+    .card img {
+      width: 80px;
+      height: auto;
+      border-radius: 5px;
+      border: 2px solid #22c55e;
+    }
+    .cardinfo h5 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: #22c55e;
+    }
+
+    /* Grid */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(7, 60px);
+      grid-template-rows: repeat(4, 60px);
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .grid-item {
+      width: 60px;
+      height: 60px;
+      background-color: #14532d;
+      border: 2px solid #22c55e;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+      transition: transform 0.3s ease, background-color 0.3s;
+    }
+    .grid-item.goal {
+      background-image: url('goal.png');
+      background-size: cover;
+      background-position: center;
+      transform: scale(1.2);
+      box-shadow: 0 6px 12px rgba(34, 197, 94, 0.6);
+    }
+
+    /* Buttons */
+    #startBtn, .link-btn {
+      padding: 14px 30px;
+      font-size: 18px;
+      margin-top: 15px;
+      background-color: #22c55e;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+    #startBtn:hover, .link-btn:hover {
+      background-color: #16a34a;
+      transform: scale(1.1);
+    }
+
+    .button-container {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .grid-container {
+        grid-template-columns: repeat(7, 40px);
+        grid-template-rows: repeat(4, 40px);
+        gap: 5px;
+      }
+      .grid-item {
+        width: 40px;
+        height: 40px;
+      }
+      .card {
+        flex-direction: column;
+        text-align: center;
+      }
+      .card img {
+        width: 60px;
+      }
+      .cardinfo h5 {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Info Button -->
+<div class="info-btn" onclick="openPopup('info')">i</div>
+
+<!-- Info Popup -->
+<div class="popup-overlay" id="infoPopup">
+  <div class="popup">
+    <h2>Goal Analyser - Info</h2>
+    <p>This is a simulation tool for educational purposes only.<br><br>
+       1. OPEN GAME<br>
+       2. SET, FIELD: MEDIOM<br>
+       3. GOAL OPEN: 4<BR>
+       4. This tool does not give real game predictions and is only for learning UI interaction and randomness.</p>
+    <button onclick="closePopup()">Close</button>
+    <br><br>
+    <button onclick="openPopup('disclaimer')">📜 Disclaimer</button>
+  </div>
+</div>
+
+<!-- Disclaimer Popup -->
+<div class="popup-overlay" id="disclaimerPopup">
+  <div class="popup">
+    <h2>📜 Disclaimer</h2>
+    <p>
+      This application is created for educational and informational purposes only.<br>
+      The data shown is generated randomly and not based on any real game results.<br>
+      This app does not guarantee the result of any game, nor does it promote any form of gambling.<br>
+      Any decision you make using this tool is entirely your own responsibility.<br>
+      By using this app, you agree it is only an analysis tool, and all associated risks are your own.
+    </p>
+    <button onclick="closePopup()">Close</button>
+  </div>
+</div>
+
+<!-- Card -->
+<div class="card">
+  <img src="goallogo.png" alt="Game Image">
+  <div class="cardinfo">
+    <h5>⚽ WELCOME TO GOAL ANALYSER</h5>
+  </div>
+</div>
+
+<!-- Grid -->
+<div class="grid-container" id="gridContainer"></div>
+<button id="startBtn">⚽ START ANALYSE</button>
+
+<!-- Links -->
+<div class="button-container">
+  <button class="link-btn" onclick="window.open('https://linkopen19.github.io/LinkOpener/colourpredictiontoolschannel.html', '_blank')">📢 JOIN TELEGRAM FOR UPDATES</button>
+</div>
+
+<script>
+  const gridContainer = document.getElementById('gridContainer');
+  const startBtn = document.getElementById('startBtn');
+  let isFirstPrediction = true;
+
+  function openPopup(type) {
+    closePopup(); // pehle saare close
+    if (type === 'info') {
+      document.getElementById('infoPopup').style.display = 'flex';
+    } else if (type === 'disclaimer') {
+      document.getElementById('disclaimerPopup').style.display = 'flex';
+    }
+  }
+
+  function closePopup() {
+    document.getElementById('infoPopup').style.display = 'none';
+    document.getElementById('disclaimerPopup').style.display = 'none';
+  }
+
+  function createGrid() {
+    gridContainer.innerHTML = '';
+    for (let i = 0; i < 28; i++) {
+      const gridItem = document.createElement('div');
+      gridItem.classList.add('grid-item');
+      gridContainer.appendChild(gridItem);
+    }
+  }
+
+  function placeGoals() {
+    for (let col = 0; col < 4; col++) {
+      const randomRow = Math.floor(Math.random() * 4);
+      const index = randomRow * 7 + col;
+      const goalItem = gridContainer.children[index];
+      setTimeout(() => {
+        goalItem.classList.add('goal');
+      }, col * 300);
+    }
+  }
+
+  startBtn.addEventListener('click', () => {
+    createGrid();
+    placeGoals();
+    if (isFirstPrediction) {
+      startBtn.innerText = "🔁 NEXT";
+      isFirstPrediction = false;
+    }
+  });
+
+  createGrid();
+</script>
+
+</body>
+</html>
